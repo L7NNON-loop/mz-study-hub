@@ -35,17 +35,17 @@ export default function Auth() {
     try {
       if (isLogin) {
         // Login
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
         
         // Check if user has completed onboarding
-        const userDoc = await getDoc(doc(db, 'users', auth.currentUser!.uid));
+        const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
         if (userDoc.exists() && userDoc.data().onboardingCompleted) {
+          toast.success('Login realizado com sucesso!');
           navigate('/dashboard');
         } else {
+          toast.success('Bem-vindo! Complete seu perfil.');
           navigate('/onboarding');
         }
-        
-        toast.success('Login realizado com sucesso!');
       } else {
         // Sign up
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -58,7 +58,7 @@ export default function Auth() {
           onboardingCompleted: false,
         });
         
-        toast.success('Conta criada com sucesso!');
+        toast.success('Conta criada! Complete seu perfil.');
         navigate('/onboarding');
       }
     } catch (error: any) {
@@ -84,20 +84,20 @@ export default function Auth() {
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8 animate-fade-in">
-          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-4xl mx-auto mb-4 shadow-xl">
-            📘
+        <div className="text-center mb-6 animate-fade-in">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-3 shadow-lg">
+            <UserIcon className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-heading font-bold mb-2">Escola Digital MZ</h1>
-          <p className="text-muted-foreground">Educação de qualidade para todos</p>
+          <h1 className="text-2xl font-heading font-bold mb-1">Escola Digital MZ</h1>
+          <p className="text-sm text-muted-foreground">Educação de qualidade para todos</p>
         </div>
 
         {/* Auth Form */}
-        <div className="bg-card rounded-3xl shadow-2xl p-8 border border-border">
-          <div className="flex gap-2 mb-6">
+        <div className="bg-card rounded-2xl shadow-xl p-6 border border-border">
+          <div className="flex gap-2 mb-4">
             <Button
               variant={isLogin ? "default" : "outline"}
-              className="flex-1"
+              className="flex-1 text-sm h-9"
               onClick={() => setIsLogin(true)}
               type="button"
             >
@@ -105,7 +105,7 @@ export default function Auth() {
             </Button>
             <Button
               variant={!isLogin ? "default" : "outline"}
-              className="flex-1"
+              className="flex-1 text-sm h-9"
               onClick={() => setIsLogin(false)}
               type="button"
             >
@@ -113,11 +113,11 @@ export default function Auth() {
             </Button>
           </div>
 
-          <form onSubmit={handleAuth} className="space-y-4">
+          <form onSubmit={handleAuth} className="space-y-3">
             {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="name" className="flex items-center gap-2">
-                  <UserIcon className="w-4 h-4" />
+              <div className="space-y-1.5">
+                <Label htmlFor="name" className="flex items-center gap-1.5 text-xs">
+                  <UserIcon className="w-3 h-3" />
                   Nome Completo
                 </Label>
                 <Input
@@ -126,14 +126,14 @@ export default function Auth() {
                   placeholder="Seu nome"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="h-12 rounded-xl"
+                  className="h-10 rounded-lg text-sm"
                 />
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="flex items-center gap-2">
-                <Mail className="w-4 h-4" />
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="flex items-center gap-1.5 text-xs">
+                <Mail className="w-3 h-3" />
                 Email
               </Label>
               <Input
@@ -142,13 +142,13 @@ export default function Auth() {
                 placeholder="seu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-12 rounded-xl"
+                className="h-10 rounded-lg text-sm"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="flex items-center gap-2">
-                <Lock className="w-4 h-4" />
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="flex items-center gap-1.5 text-xs">
+                <Lock className="w-3 h-3" />
                 Senha
               </Label>
               <Input
@@ -157,14 +157,13 @@ export default function Auth() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-12 rounded-xl"
+                className="h-10 rounded-lg text-sm"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full"
-              size="lg"
+              className="w-full h-10 text-sm"
               disabled={loading}
               variant="gradient"
             >

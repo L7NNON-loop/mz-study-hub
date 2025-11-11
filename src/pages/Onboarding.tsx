@@ -85,36 +85,35 @@ export default function Onboarding() {
           {step === 1 && (
             <div className="space-y-6 animate-fade-in">
               <div className="text-center mb-6">
-                <h2 className="text-2xl font-heading font-bold mb-2">
+                <h2 className="text-xl font-heading font-bold mb-2">
                   Qual é o seu nome?
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Vamos personalizar sua experiência
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="name">Nome Completo</Label>
+                <Label htmlFor="name" className="text-sm">Nome Completo</Label>
                 <Input
                   id="name"
                   type="text"
                   placeholder="Ex: João Silva"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="h-14 rounded-xl text-lg"
+                  className="h-11 rounded-lg text-base"
                   autoFocus
                 />
               </div>
 
               <Button
                 onClick={() => name && setStep(2)}
-                className="w-full"
-                size="lg"
+                className="w-full h-10 text-sm"
                 disabled={!name}
                 variant="gradient"
               >
                 Continuar
-                <ChevronRight className="w-5 h-5 ml-2" />
+                <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           )}
@@ -123,18 +122,18 @@ export default function Onboarding() {
           {step === 2 && (
             <div className="space-y-6 animate-fade-in">
               <div className="text-center mb-6">
-                <h2 className="text-2xl font-heading font-bold mb-2">
+                <h2 className="text-xl font-heading font-bold mb-2">
                   Olá, {name}! 👋
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Em que província você está?
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label>Província</Label>
+                <Label className="text-sm">Província</Label>
                 <Select value={province} onValueChange={setProvince}>
-                  <SelectTrigger className="h-14 rounded-xl text-lg">
+                  <SelectTrigger className="h-11 rounded-lg text-base">
                     <SelectValue placeholder="Selecione sua província" />
                   </SelectTrigger>
                   <SelectContent>
@@ -151,21 +150,19 @@ export default function Onboarding() {
                 <Button
                   onClick={() => setStep(1)}
                   variant="outline"
-                  className="flex-1"
-                  size="lg"
+                  className="flex-1 h-10 text-sm"
                 >
-                  <ChevronLeft className="w-5 h-5 mr-2" />
+                  <ChevronLeft className="w-4 h-4 mr-2" />
                   Voltar
                 </Button>
                 <Button
                   onClick={() => province && setStep(3)}
-                  className="flex-1"
-                  size="lg"
+                  className="flex-1 h-10 text-sm"
                   disabled={!province}
                   variant="gradient"
                 >
                   Continuar
-                  <ChevronRight className="w-5 h-5 ml-2" />
+                  <ChevronRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
             </div>
@@ -175,18 +172,18 @@ export default function Onboarding() {
           {step === 3 && (
             <div className="space-y-6 animate-fade-in">
               <div className="text-center mb-6">
-                <h2 className="text-2xl font-heading font-bold mb-2">
+                <h2 className="text-xl font-heading font-bold mb-2">
                   Quase lá! 🎓
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Qual classe ou curso você está?
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label>Classe/Curso</Label>
+                <Label className="text-sm">Classe/Curso</Label>
                 <Select value={classLevel} onValueChange={setClassLevel}>
-                  <SelectTrigger className="h-14 rounded-xl text-lg">
+                  <SelectTrigger className="h-11 rounded-lg text-base">
                     <SelectValue placeholder="Selecione sua classe" />
                   </SelectTrigger>
                   <SelectContent>
@@ -203,16 +200,14 @@ export default function Onboarding() {
                 <Button
                   onClick={() => setStep(2)}
                   variant="outline"
-                  className="flex-1"
-                  size="lg"
+                  className="flex-1 h-10 text-sm"
                 >
-                  <ChevronLeft className="w-5 h-5 mr-2" />
+                  <ChevronLeft className="w-4 h-4 mr-2" />
                   Voltar
                 </Button>
                 <Button
                   onClick={handleComplete}
-                  className="flex-1"
-                  size="lg"
+                  className="flex-1 h-10 text-sm"
                   disabled={!classLevel || loading}
                   variant="success"
                 >
