@@ -30,21 +30,30 @@ export default function Auth() {
       return;
     }
 
+    if (password.length < 6) {
+      toast.error('A senha deve ter pelo menos 6 caracteres');
+      return;
+    }
+
     setLoading(true);
 
     try {
       if (isLogin) {
         // Login
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, email, password);
+        const user = auth.currentUser;
         
-        // Check if user has completed onboarding
-        const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
-        if (userDoc.exists() && userDoc.data().onboardingCompleted) {
-          toast.success('Login realizado com sucesso!');
-          navigate('/dashboard');
-        } else {
-          toast.success('Bem-vindo! Complete seu perfil.');
-          navigate('/onboarding');
+        if (user) {
+          // Check if user has completed onboarding
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          
+          if (userDoc.exists() && userDoc.data().onboardingCompleted) {
+            toast.success('Bem-vindo de volta!');
+            setTimeout(() => navigate('/dashboard'), 500);
+          } else {
+            toast.success('Complete seu perfil para continuar');
+            setTimeout(() => navigate('/onboarding'), 500);
+          }
         }
       } else {
         // Sign up
@@ -58,8 +67,8 @@ export default function Auth() {
           onboardingCompleted: false,
         });
         
-        toast.success('Conta criada! Complete seu perfil.');
-        navigate('/onboarding');
+        toast.success('Conta criada com sucesso!');
+        setTimeout(() => navigate('/onboarding'), 500);
       }
     } catch (error: any) {
       console.error('Auth error:', error);
@@ -70,8 +79,10 @@ export default function Auth() {
         toast.error('A senha deve ter pelo menos 6 caracteres');
       } else if (error.code === 'auth/invalid-email') {
         toast.error('Email inválido');
-      } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+      } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
         toast.error('Email ou senha incorretos');
+      } else if (error.code === 'auth/too-many-requests') {
+        toast.error('Muitas tentativas. Aguarde um momento.');
       } else {
         toast.error('Erro ao processar. Tente novamente.');
       }

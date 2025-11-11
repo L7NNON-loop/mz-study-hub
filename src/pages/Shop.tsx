@@ -68,32 +68,32 @@ export default function Shop() {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1 container mx-auto px-4 py-12">
+      <main className="flex-1 container mx-auto px-4 py-8">
         {/* Header Section */}
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">
-            Nossa Loja 🛒
+        <div className="mb-8">
+          <h1 className="text-2xl sm:text-3xl font-heading font-bold mb-2">
+            Nossa Loja
           </h1>
-          <p className="text-xl text-muted-foreground">
-            Encontre ebooks e exames preparatórios para aprimorar seus estudos
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Ebooks e exames preparatórios para aprimorar seus estudos
           </p>
         </div>
 
         {/* Filters */}
-        <div className="bg-card rounded-2xl p-6 border border-border mb-8 shadow-md">
-          <div className="grid md:grid-cols-2 gap-4">
+        <div className="bg-card rounded-xl p-4 border border-border mb-6 shadow-md">
+          <div className="grid sm:grid-cols-2 gap-3">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Buscar produtos..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 h-12 rounded-xl"
+                className="pl-10 h-10 rounded-lg text-sm"
               />
             </div>
 
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="h-12 rounded-xl">
+              <SelectTrigger className="h-10 rounded-lg text-sm">
                 <Filter className="w-4 h-4 mr-2" />
                 <SelectValue placeholder="Todas as categorias" />
               </SelectTrigger>
@@ -118,34 +118,41 @@ export default function Shop() {
 
         {/* Products Grid */}
         {loading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-card rounded-2xl p-6 border border-border animate-pulse">
-                <div className="bg-muted h-48 rounded-xl mb-4" />
-                <div className="bg-muted h-6 rounded mb-2" />
-                <div className="bg-muted h-4 rounded mb-4" />
-                <div className="bg-muted h-10 rounded" />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-card rounded-xl p-4 border border-border animate-pulse">
+                <div className="bg-muted h-40 rounded-lg mb-3" />
+                <div className="bg-muted h-5 rounded mb-2" />
+                <div className="bg-muted h-4 rounded mb-3" />
+                <div className="bg-muted h-9 rounded" />
               </div>
             ))}
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-              <ShoppingCart className="w-10 h-10 text-muted-foreground" />
+          <div className="text-center py-16">
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+              <ShoppingCart className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-2xl font-heading font-semibold mb-2">
+            <h3 className="text-xl font-heading font-semibold mb-2">
               Nenhum produto encontrado
             </h3>
-            <p className="text-muted-foreground">
-              Tente ajustar os filtros ou buscar por outro termo
+            <p className="text-sm text-muted-foreground mb-4">
+              {products.length === 0 
+                ? 'Ainda não há produtos disponíveis. Volte em breve!'
+                : 'Tente ajustar os filtros ou buscar por outro termo'}
             </p>
+            {products.length === 0 && (
+              <Button variant="outline" size="sm" onClick={() => navigate('/materials')}>
+                Ver Matérias Gratuitas
+              </Button>
+            )}
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-2xl transition-all duration-300 group cursor-pointer"
+                className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 group cursor-pointer"
                 onClick={() => navigate(`/product/${product.id}`)}
               >
                 <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden">
@@ -158,14 +165,14 @@ export default function Shop() {
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       {product.category === 'ebooks' ? (
-                        <BookOpen className="w-16 h-16 text-primary" />
+                        <BookOpen className="w-12 h-12 text-primary" />
                       ) : (
-                        <FileText className="w-16 h-16 text-secondary" />
+                        <FileText className="w-12 h-12 text-secondary" />
                       )}
                     </div>
                   )}
-                  <div className="absolute top-3 right-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  <div className="absolute top-2 right-2">
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                       product.category === 'ebooks' 
                         ? 'bg-primary text-primary-foreground' 
                         : 'bg-secondary text-secondary-foreground'
@@ -175,21 +182,21 @@ export default function Shop() {
                   </div>
                 </div>
 
-                <div className="p-6">
-                  <h3 className="text-xl font-heading font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                <div className="p-4">
+                  <h3 className="text-base font-heading font-semibold mb-1 group-hover:text-primary transition-colors line-clamp-2">
                     {product.title}
                   </h3>
-                  <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                  <p className="text-muted-foreground text-xs mb-3 line-clamp-2">
                     {product.description}
                   </p>
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-2xl font-bold text-primary">
+                      <span className="text-xl font-bold text-primary">
                         {product.price} MT
                       </span>
                     </div>
-                    <Button size="sm" variant="gradient">
-                      <ShoppingCart className="w-4 h-4 mr-2" />
+                    <Button size="sm" variant="gradient" className="text-xs h-8">
+                      <ShoppingCart className="w-3 h-3 mr-1.5" />
                       Comprar
                     </Button>
                   </div>
