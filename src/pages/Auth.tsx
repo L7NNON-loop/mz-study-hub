@@ -41,20 +41,11 @@ export default function Auth() {
       if (isLogin) {
         // Login
         await signInWithEmailAndPassword(auth, email, password);
-        const user = auth.currentUser;
         
-        if (user) {
-          // Check if user has completed onboarding
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
-          
-          if (userDoc.exists() && userDoc.data().onboardingCompleted) {
-            toast.success('Bem-vindo de volta!');
-            setTimeout(() => navigate('/dashboard'), 500);
-          } else {
-            toast.success('Complete seu perfil para continuar');
-            setTimeout(() => navigate('/onboarding'), 500);
-          }
-        }
+        toast.success('✓ Você está logado');
+        setTimeout(() => {
+          navigate('/');
+        }, 800);
       } else {
         // Sign up
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -64,11 +55,13 @@ export default function Auth() {
           name,
           email,
           createdAt: new Date().toISOString(),
-          onboardingCompleted: false,
+          hasCompletedOnboarding: true,
         });
         
-        toast.success('Conta criada com sucesso!');
-        setTimeout(() => navigate('/onboarding'), 500);
+        toast.success('✓ Registrado com sucesso');
+        setTimeout(() => {
+          navigate('/');
+        }, 800);
       }
     } catch (error: any) {
       console.error('Auth error:', error);

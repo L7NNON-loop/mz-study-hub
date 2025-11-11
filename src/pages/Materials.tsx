@@ -1,12 +1,21 @@
 import { useState } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { BookOpen, FileText, GraduationCap, Calculator, Atom, TestTube, Dna, FileEdit, Landmark, Globe } from 'lucide-react';
+import { BookOpen, FileText, GraduationCap, Calculator, Atom, TestTube, Dna, FileEdit, Landmark, Globe, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/custom-button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PaymentModal } from '@/components/PaymentModal';
+import { Badge } from '@/components/ui/badge';
 
 export default function Materials() {
   const [activeTab, setActiveTab] = useState('subjects');
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState({ name: '', price: 150 });
+
+  const handleBuyClick = (productName: string) => {
+    setSelectedProduct({ name: productName, price: 150 });
+    setIsPaymentModalOpen(true);
+  };
 
   const subjects = [
     {
@@ -77,17 +86,17 @@ export default function Materials() {
   ];
 
   const books = [
-    { class: '11ª Classe', url: 'https://www.escolamz.com/search/label/Livros%20da%2011%C2%AA%20Classe' },
-    { class: '12ª Classe', url: 'https://www.escolamz.com/search/label/Livros%20da%2012%C2%AA%20Classe' },
+    { class: '11ª Classe' },
+    { class: '12ª Classe' },
   ];
 
   const exams = [
-    { name: 'Exames da 10ª Classe', url: 'https://www.escolamz.com/search/label/Exames%20da%2010%C2%AA%20Classe' },
-    { name: 'Exames da 12ª Classe', url: 'https://www.escolamz.com/search/label/Exames%20da%2012%C2%AA%20Classe' },
-    { name: 'Exames de Admissão - UP', url: 'https://evirtualmz.blogspot.com/2020/07/baixar-todos-exames-de-admissao-da-up.html' },
-    { name: 'Exames de Admissão - UEM', url: 'https://evirtualmz.blogspot.com/search/label/Exames%20de%20Admiss%C3%A3o%20da%20UEM' },
-    { name: 'Exames de Admissão - ISRI', url: 'https://evirtualmz.blogspot.com/2020/07/isri-baixar-todos-exames-de-admissao.html' },
-    { name: 'Exames de Admissão - ISCISA', url: 'https://evirtualmz.blogspot.com/2020/07/iscisa-baixar-exames-de-admissao.html' },
+    { name: 'Exames da 10ª Classe' },
+    { name: 'Exames da 12ª Classe' },
+    { name: 'Exames de Admissão - UP' },
+    { name: 'Exames de Admissão - UEM' },
+    { name: 'Exames de Admissão - ISRI' },
+    { name: 'Exames de Admissão - ISCISA' },
   ];
 
   return (
@@ -141,7 +150,10 @@ export default function Materials() {
                           variant="outline"
                           size="sm"
                           className="w-full justify-start text-xs h-8"
-                          onClick={() => window.open(item.url, '_blank')}
+                          onClick={() => {
+                            const subjectName = encodeURIComponent(`${subject.name} - ${item.class}`);
+                            window.location.href = `/subject?url=${encodeURIComponent(item.url)}&title=${subjectName}`;
+                          }}
                         >
                           <FileText className="w-3 h-3 mr-1.5" />
                           {item.class}
@@ -156,63 +168,79 @@ export default function Materials() {
 
           {/* Livros Tab */}
           <TabsContent value="books" className="space-y-4">
-            <div className="bg-card rounded-xl p-6 border border-border">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                  <GraduationCap className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-heading font-bold">Baixar Livros</h3>
-                  <p className="text-xs text-muted-foreground">Material didático completo por classe</p>
-                </div>
-              </div>
-              <div className="grid sm:grid-cols-2 gap-3">
-                {books.map((book, idx) => (
+            <div className="grid sm:grid-cols-2 gap-4">
+              {books.map((book, idx) => (
+                <div
+                  key={idx}
+                  className="bg-card rounded-xl p-5 border border-border hover:border-primary/50 hover:shadow-lg transition-all"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
+                      <GraduationCap className="w-6 h-6 text-white" />
+                    </div>
+                    <Badge variant="secondary" className="text-xs font-semibold">
+                      <span className="line-through text-muted-foreground mr-1.5">800.00 MT</span>
+                      <span className="text-primary">150.00 MT</span>
+                    </Badge>
+                  </div>
+                  
+                  <h3 className="text-base font-heading font-bold mb-1">
+                    Livros da {book.class}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mb-4">
+                    Material didático completo em PDF
+                  </p>
+                  
                   <Button
-                    key={idx}
-                    variant="outline"
-                    className="w-full justify-between text-sm h-12"
-                    onClick={() => window.open(book.url, '_blank')}
+                    variant="gradient"
+                    size="sm"
+                    className="w-full text-xs h-9"
+                    onClick={() => handleBuyClick(`Livros da ${book.class}`)}
                   >
-                    <span className="flex items-center gap-2">
-                      <BookOpen className="w-4 h-4" />
-                      Livros da {book.class}
-                    </span>
-                    <FileText className="w-4 h-4" />
+                    <ShoppingCart className="w-3.5 h-3.5 mr-1.5" />
+                    Comprar
                   </Button>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </TabsContent>
 
           {/* Exames Tab */}
           <TabsContent value="exams" className="space-y-4">
-            <div className="bg-card rounded-xl p-6 border border-border">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-secondary to-orange-500 flex items-center justify-center">
-                  <FileText className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-heading font-bold">Exames e Preparatórios</h3>
-                  <p className="text-xs text-muted-foreground">Provas anteriores e exames de admissão</p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                {exams.map((exam, idx) => (
+            <div className="grid sm:grid-cols-2 gap-4">
+              {exams.map((exam, idx) => (
+                <div
+                  key={idx}
+                  className="bg-card rounded-xl p-5 border border-border hover:border-primary/50 hover:shadow-lg transition-all"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-secondary to-orange-500 flex items-center justify-center flex-shrink-0">
+                      <FileText className="w-6 h-6 text-white" />
+                    </div>
+                    <Badge variant="secondary" className="text-xs font-semibold">
+                      <span className="line-through text-muted-foreground mr-1.5">800.00 MT</span>
+                      <span className="text-primary">150.00 MT</span>
+                    </Badge>
+                  </div>
+                  
+                  <h3 className="text-sm font-heading font-bold mb-1">
+                    {exam.name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mb-4">
+                    Exames anteriores em PDF
+                  </p>
+                  
                   <Button
-                    key={idx}
-                    variant="outline"
-                    className="w-full justify-between text-sm h-11"
-                    onClick={() => window.open(exam.url, '_blank')}
+                    variant="gradient"
+                    size="sm"
+                    className="w-full text-xs h-9"
+                    onClick={() => handleBuyClick(exam.name)}
                   >
-                    <span className="flex items-center gap-2">
-                      <FileText className="w-4 h-4" />
-                      {exam.name}
-                    </span>
-                    <Calculator className="w-4 h-4" />
+                    <ShoppingCart className="w-3.5 h-3.5 mr-1.5" />
+                    Comprar
                   </Button>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </TabsContent>
         </Tabs>
@@ -232,6 +260,13 @@ export default function Materials() {
       </main>
 
       <Footer />
+
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        productName={selectedProduct.name}
+        productPrice={selectedProduct.price}
+      />
     </div>
   );
 }

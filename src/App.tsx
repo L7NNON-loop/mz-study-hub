@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { CookieConsent } from "@/components/CookieConsent";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
@@ -13,6 +14,7 @@ import Product from "./pages/Product";
 import Chat from "./pages/Chat";
 import Admin from "./pages/Admin";
 import Materials from "./pages/Materials";
+import SubjectContent from "./pages/SubjectContent";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
@@ -76,6 +78,11 @@ const App = () => (
                 <Materials />
               </ProtectedRoute>
             } />
+            <Route path="/subject" element={
+              <ProtectedRoute>
+                <SubjectContent />
+              </ProtectedRoute>
+            } />
             <Route path="/profile" element={
               <ProtectedRoute>
                 <Profile />
@@ -89,6 +96,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+        <CookieConsent />
       </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>
