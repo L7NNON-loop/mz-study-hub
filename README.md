@@ -1,73 +1,134 @@
-# Welcome to your Lovable project
+# 📘 Escola Digital MZ
 
-## Project info
+Uma plataforma educacional digital moderna e profissional para estudantes moçambicanos. Desenvolvida com React, TypeScript, Firebase e TailwindCSS.
 
-**URL**: https://lovable.dev/projects/a58dd7a5-a6d7-4c6a-a2c4-674a8807541e
+## ✨ Funcionalidades
 
-## How can I edit this code?
+### Para Estudantes
+- 🎓 **Autenticação Segura** - Login e cadastro com Firebase
+- 📝 **Onboarding Personalizado** - Configure seu perfil (nome, província, classe)
+- 📚 **Matérias Gratuitas** - Acesso a conteúdos educacionais sem custos
+- 🛒 **Loja de Ebooks e Exames** - Compre materiais preparatórios
+- 💳 **Pagamento Flexível** - USSD (*898#) ou WhatsApp
+- 💬 **Chat de Suporte** - Tire dúvidas em tempo real
 
-There are several ways of editing your application.
+### Para Administradores
+- 🔐 **Painel Admin Seguro** - Código de acesso: `Madara08`
+- ➕ **Gestão de Produtos** - Adicionar, editar e remover produtos
+- 📊 **Visualização de Pedidos** - Acompanhe vendas e conversas
 
-**Use Lovable**
+## 🚀 Tecnologias
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a58dd7a5-a6d7-4c6a-a2c4-674a8807541e) and start prompting.
+- **Frontend**: React 18 + TypeScript + Vite
+- **Styling**: TailwindCSS + shadcn/ui
+- **Backend**: Firebase (Auth, Firestore, Storage)
+- **Animações**: Framer Motion
+- **PWA**: Configurado para instalação em Android
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🎨 Design System
 
-**Use your preferred IDE**
+O projeto utiliza um design system robusto com:
+- **Cores Principais**: 
+  - Primary: `#4B6BFB` (Azul vibrante)
+  - Secondary: `#F97316` (Laranja energético)
+  - Fundo: `#F5F7FA` (Cinza suave)
+- **Fontes**: Poppins (headings) + Inter (body)
+- **Estilo**: Rounded corners, sombras suaves, animações fluidas
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 📦 Instalação
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+# Instalar dependências
+npm install
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Iniciar servidor de desenvolvimento
 npm run dev
+
+# Build para produção
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+## 🔥 Firebase Configuration
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+O projeto já está configurado com Firebase. As credenciais estão em `src/lib/firebase.ts`.
 
-**Use GitHub Codespaces**
+### Estrutura do Firestore
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```
+users/{userId}
+  - name: string
+  - email: string
+  - province: string
+  - class: string
+  - onboardingCompleted: boolean
+  - createdAt: timestamp
 
-## What technologies are used for this project?
+products/{productId}
+  - title: string
+  - description: string
+  - price: number
+  - imageUrl: string
+  - category: 'ebooks' | 'exams'
+  - available: boolean
 
-This project is built with:
+chat/{userId}/messages/{messageId}
+  - text: string
+  - sender: 'user' | 'bot'
+  - timestamp: timestamp
+  - userId: string
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📱 PWA (Progressive Web App)
 
-## How can I deploy this project?
+O aplicativo é configurado como PWA e pode ser instalado em dispositivos Android:
 
-Simply open [Lovable](https://lovable.dev/projects/a58dd7a5-a6d7-4c6a-a2c4-674a8807541e) and click on Share -> Publish.
+1. Acesse o site no navegador
+2. Toque no menu (⋮)
+3. Selecione "Adicionar à tela inicial"
+4. O app estará disponível como aplicativo nativo
 
-## Can I connect a custom domain to my Lovable project?
+## 🔐 Acesso Admin
 
-Yes, you can!
+Para acessar o painel administrativo:
+1. Navegue para `/admin`
+2. Digite o código: `Madara08`
+3. Gerencie produtos e visualize pedidos
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📞 Contato & Suporte
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- **Email**: escoladigital.mz@support.com
+- **WhatsApp**: +258 87 100 9140
+- **Localização**: Maputo — Local X, Moçambique
+- **Horário**: Segunda a Sábado, 07:00–17:00
+
+## 🎯 Rotas Principais
+
+- `/` - Landing page
+- `/auth` - Login e cadastro
+- `/onboarding` - Configuração inicial
+- `/dashboard` - Dashboard principal
+- `/shop` - Loja de produtos
+- `/materials` - Matérias gratuitas
+- `/chat` - Suporte online
+- `/admin` - Painel administrativo
+- `/profile` - Perfil do usuário
+
+## 🌟 Features Técnicas
+
+- ✅ Autenticação Firebase completa
+- ✅ Rotas protegidas
+- ✅ Design responsivo (mobile-first)
+- ✅ PWA instalável
+- ✅ Sistema de chat em tempo real
+- ✅ Upload e gestão de produtos
+- ✅ Integração com pagamentos (USSD e WhatsApp)
+- ✅ SEO otimizado
+- ✅ Performance otimizada
+
+## 📄 Licença
+
+© 2024 Escola Digital MZ. Todos os direitos reservados.
+
+---
+
+Desenvolvido com ❤️ para a educação em Moçambique 🇲🇿
