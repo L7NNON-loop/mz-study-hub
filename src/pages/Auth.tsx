@@ -14,70 +14,62 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!email || !password) {
-      toast.error('Preencha todos os campos');
-      return;
-    }
-
-    if (!isLogin && !name) {
-      toast.error('Preencha seu nome');
-      return;
-    }
-
-    if (password.length < 6) {
-      toast.error('A senha deve ter pelo menos 6 caracteres');
-      return;
-    }
-
+    setError('');
     setLoading(true);
 
     try {
       if (isLogin) {
-        // Login
-        await signInWithEmailAndPassword(auth, email, password);
-        
-        toast.success('✓ Você está logado');
-        setTimeout(() => {
-          navigate('/');
-        }, 800);
+        // Login flow
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        if (userCredential.user) {
+          toast.success('✓ Você está logado', {
+            description: 'Redirecionando...',
+          });
+          setTimeout(() => {
+            navigate('/');
+          }, 500);
+        }
       } else {
-        // Sign up
+        // Sign up flow
+        if (password.length < 6) {
+          setError('A senha deve ter pelo menos 6 caracteres');
+          toast.error('Senha muito curta', {
+            description: 'A senha deve ter pelo menos 6 caracteres',
+          });
+          setLoading(false);
+          return;
+        }
+
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        
-        // Create user document
-        await setDoc(doc(db, 'users', userCredential.user.uid), {
-          name,
-          email,
-          createdAt: new Date().toISOString(),
-          hasCompletedOnboarding: true,
-        });
-        
-        toast.success('✓ Registrado com sucesso');
-        setTimeout(() => {
-          navigate('/');
-        }, 800);
+        if (userCredential.user) {
+          toast.success('✓ Registrado com sucesso', {
+            description: 'Bem-vindo! Redirecionando...',
+          });
+          setTimeout(() => {
+            navigate('/');
+          }, 500);
+        }
       }
     } catch (error: any) {
-      console.error('Auth error:', error);
-      
+      setError(error.message);
       if (error.code === 'auth/email-already-in-use') {
-        toast.error('Este email já está em uso');
-      } else if (error.code === 'auth/weak-password') {
-        toast.error('A senha deve ter pelo menos 6 caracteres');
-      } else if (error.code === 'auth/invalid-email') {
-        toast.error('Email inválido');
-      } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-        toast.error('Email ou senha incorretos');
-      } else if (error.code === 'auth/too-many-requests') {
-        toast.error('Muitas tentativas. Aguarde um momento.');
+        toast.error('Email já registrado', {
+          description: 'Este email já está em uso. Tente fazer login.',
+        });
+      } else if (error.code === 'auth/invalid-credential') {
+        toast.error('Credenciais inválidas', {
+          description: 'Email ou senha incorretos.',
+        });
       } else {
-        toast.error('Erro ao processar. Tente novamente.');
+        toast.error('Erro', {
+          description: error.message,
+        });
       }
     } finally {
       setLoading(false);

@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/custom-button';
 import { ArrowLeft, ExternalLink, Loader2 } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
 
 export default function SubjectContent() {
   const [searchParams] = useSearchParams();
@@ -11,12 +12,71 @@ export default function SubjectContent() {
   const url = searchParams.get('url');
   const title = searchParams.get('title');
   const [loading, setLoading] = useState(true);
+  const [content, setContent] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     if (!url) {
       navigate('/materials');
+      return;
     }
+    
+    fetchContent();
   }, [url, navigate]);
+
+  const fetchContent = async () => {
+    if (!url) return;
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      // Fetch the content from the URL
+      const response = await fetch(url);
+      const html = await response.text();
+      
+      // Parse HTML and extract main content
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      
+      // Try to find the main content area
+      const article = doc.querySelector('article') || 
+                      doc.querySelector('.post-body') || 
+                      doc.querySelector('.entry-content') ||
+                      doc.querySelector('main') ||
+                      doc.querySelector('.content');
+      
+      if (article) {
+        // Clean up the content
+        const clonedArticle = article.cloneNode(true) as HTMLElement;
+        
+        // Remove unwanted elements
+        const unwantedSelectors = ['script', 'style', 'iframe', '.ads', '.advertisement', 'nav', 'header', 'footer'];
+        unwantedSelectors.forEach(selector => {
+          clonedArticle.querySelectorAll(selector).forEach(el => el.remove());
+        });
+        
+        setContent(clonedArticle.innerHTML);
+      } else {
+        setError('Não foi possível extrair o conteúdo desta página.');
+        toast({
+          title: "Erro",
+          description: "Não foi possível carregar o conteúdo.",
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching content:', err);
+      setError('Erro ao carregar o conteúdo. Por favor, tente novamente.');
+      toast({
+        title: "Erro",
+        description: "Erro ao carregar o conteúdo.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -53,19 +113,31 @@ export default function SubjectContent() {
           </h1>
         )}
 
-        <div className="bg-card rounded-xl border border-border overflow-hidden" style={{ minHeight: '70vh' }}>
+        <div className="bg-card rounded-xl border border-border overflow-hidden p-6" style={{ minHeight: '70vh' }}>
           {loading && (
-            <div className="flex items-center justify-center h-96">
+            <div className="flex flex-col items-center justify-center h-96 gap-3">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">Carregando conteúdo...</p>
             </div>
           )}
-          {url && (
-            <iframe
-              src={url}
-              className="w-full"
-              style={{ height: '70vh', border: 'none' }}
-              onLoad={() => setLoading(false)}
-              title={title || 'Conteúdo da matéria'}
+          {error && !loading && (
+            <div className="flex flex-col items-center justify-center h-96 gap-3">
+              <p className="text-sm text-destructive">{error}</p>
+              <Button variant="outline" size="sm" onClick={fetchContent}>
+                Tentar Novamente
+              </Button>
+            </div>
+          )}
+          {content && !loading && !error && (
+            <article 
+              className="prose prose-sm sm:prose lg:prose-lg max-w-none dark:prose-invert
+                prose-headings:font-heading prose-headings:font-bold
+                prose-p:text-foreground prose-p:leading-relaxed
+                prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                prose-strong:text-foreground prose-strong:font-semibold
+                prose-ul:list-disc prose-ol:list-decimal
+                prose-img:rounded-lg prose-img:shadow-md"
+              dangerouslySetInnerHTML={{ __html: content }}
             />
           )}
         </div>

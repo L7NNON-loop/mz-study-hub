@@ -53,7 +53,7 @@ export default function Dashboard() {
                   <Sparkles className="w-4 h-4" />
                   Bem-vindo à Escola Digital MZ
                 </div>
-                <h1 className="text-5xl md:text-6xl font-heading font-bold leading-tight">
+                <h1 className="text-3xl md:text-4xl font-heading font-bold leading-tight">
                   Educação de <span className="text-gradient">Qualidade</span> ao Seu Alcance
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed">
