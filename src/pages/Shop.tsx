@@ -15,7 +15,7 @@ interface Product {
   description: string;
   price: number;
   imageUrl: string;
-  category: 'ebooks' | 'exams';
+  category: 'ebooks' | 'exams' | 'cursos' | 'apostilas';
   available: boolean;
 }
 
@@ -99,18 +99,10 @@ export default function Shop() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todas as categorias</SelectItem>
-                <SelectItem value="ebooks">
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="w-4 h-4" />
-                    Ebooks
-                  </div>
-                </SelectItem>
-                <SelectItem value="exams">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4" />
-                    Exames
-                  </div>
-                </SelectItem>
+                <SelectItem value="ebooks">Ebooks</SelectItem>
+                <SelectItem value="exams">Exames</SelectItem>
+                <SelectItem value="cursos">Cursos</SelectItem>
+                <SelectItem value="apostilas">Apostilas</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -173,11 +165,14 @@ export default function Shop() {
                   )}
                   <div className="absolute top-2 right-2">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                      product.category === 'ebooks' 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'bg-secondary text-secondary-foreground'
+                      product.category === 'ebooks' ? 'bg-primary text-primary-foreground' : 
+                      product.category === 'exams' ? 'bg-secondary text-secondary-foreground' :
+                      product.category === 'cursos' ? 'bg-accent text-accent-foreground' :
+                      'bg-muted text-muted-foreground'
                     }`}>
-                      {product.category === 'ebooks' ? 'Ebook' : 'Exame'}
+                      {product.category === 'ebooks' ? 'Ebook' : 
+                       product.category === 'exams' ? 'Exame' :
+                       product.category === 'cursos' ? 'Curso' : 'Apostila'}
                     </span>
                   </div>
                 </div>

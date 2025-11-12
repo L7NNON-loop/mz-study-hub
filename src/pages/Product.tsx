@@ -5,7 +5,6 @@ import { db } from '@/lib/firebase';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/custom-button';
-import { PaymentModal } from '@/components/PaymentModal';
 import { ArrowLeft, ShoppingCart, BookOpen, FileText, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -24,7 +23,6 @@ export default function Product() {
   const navigate = useNavigate();
   const [product, setProduct] = useState<ProductData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showPayment, setShowPayment] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -153,7 +151,7 @@ export default function Product() {
                 variant="gradient"
                 size="lg"
                 className="w-full"
-                onClick={() => setShowPayment(true)}
+                onClick={() => navigate(`/checkout/${id}`)}
               >
                 <ShoppingCart className="w-5 h-5 mr-2" />
                 Comprar Agora
@@ -168,13 +166,6 @@ export default function Product() {
       </main>
 
       <Footer />
-
-      <PaymentModal
-        isOpen={showPayment}
-        onClose={() => setShowPayment(false)}
-        productName={product.title}
-        productPrice={product.price}
-      />
     </div>
   );
 }

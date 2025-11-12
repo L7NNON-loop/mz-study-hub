@@ -11,6 +11,7 @@ import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import Shop from "./pages/Shop";
 import Product from "./pages/Product";
+import Checkout from "./pages/Checkout";
 import Chat from "./pages/Chat";
 import Admin from "./pages/Admin";
 import Materials from "./pages/Materials";
@@ -66,6 +67,11 @@ const App = () => (
             <Route path="/product/:id" element={
               <ProtectedRoute>
                 <Product />
+              </ProtectedRoute>
+            } />
+            <Route path="/checkout/:id" element={
+              <ProtectedRoute>
+                <Checkout />
               </ProtectedRoute>
             } />
             <Route path="/chat" element={
